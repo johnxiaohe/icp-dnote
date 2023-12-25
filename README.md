@@ -22,3 +22,6 @@ Note: public\public&payable\subscription\private
 Searchable
 public\payable\subscription : searchable
 private : not searchable
+
+Advantage
+Dnote has no risk of going offline and will not cause application unavailability problems caused by component downtime.
