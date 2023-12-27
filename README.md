@@ -24,4 +24,6 @@ public\payable\subscription : searchable
 private : not searchable  
 
 Advantage  
-Dnote has no risk of going offline and will not cause application unavailability problems caused by component downtime.
+Dnote has no risk of going offline and will not cause application unavailability problems caused by component downtime. 
+Public price and no migaration hassles, Data not lost.
+The cost is only related to usage, data size, and usage time. There will be no additional charges or abnormal cost fluctuations due to company size or discounts.

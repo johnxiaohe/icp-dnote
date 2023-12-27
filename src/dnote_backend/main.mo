@@ -8,44 +8,39 @@ import Nat "mo:base/Nat";
 import Option "mo:base/Option";
 import Bool "mo:base/Bool";
 import Model "model";
-actor Dnote {
+// a canister per user / organization. actor declear operations api of current user
+shared ({caller = owner}) actor class Dnote() {
 
-  private stable var userTotal : Nat = 0;
-  private stable var users : List.List<Model.User> = List.nil<Model.User>();
-  private let userInfoMap : HashMap.HashMap<Principal, Model.User> = HashMap.HashMap<Principal, Model.User>(10, Principal.equal, Principal.hash);
+  // dclear
+  private stable var _owner: Principal = owner;
+  private stable var _name: Text = "";
+  // todo: owner nft id in icp? 
+  private stable var _avatar: Text = "";
+  private stable var _about: Text = "";
+
+  // just record
+  private stable var followers: [Principal] = [];
+  private stable var fans: [Principal] = [];
+  // only subscrib namespace
+  private stable var subscribers: [Principal] = [];
+  // Notes can be viewed after payment maybe: noteId:Principal?
+  private stable var notesPayments: [Text] = [];
+
+  // Note have parent/childe. Note self is folder; the id is index
+  private stable var namespace: [Text] = [];
+  private stable var notes : [Text] = [];
+  // todo: how store note tree?
 
   // init 
   system func preupgrade() {};
-  system func postupgrade(){
-      for(user in List.toIter(users)){
-        userInfoMap.put(user.id, user);
-      };
-  };
+  system func postupgrade(){};
 
-  public shared ({ caller }) func join() : async(){
-    assert(userInfoMap.get(caller) != null);
-    var user = { id = caller;
-                  joinTime = Time.now();
-                  nickName = "dnote-user" # Nat.toText(List.size<Model.User>(users));
-                  about = "Please describe your personal information";
-                };
-    ignore List.push<Model.User>(user, users);
-    userInfoMap.put(user.id, user);
-  };
-
-  public shared ({ caller }) func updatePersonalInfo(nickName: Text, about: Text): async(){
-    assert(userInfoMap.get(caller) != null);
-
-    var user = List.find<Model.User>(users, func u { Principal.equal(u.id, caller) });
-    switch user{
-      case null {};
-      case (?user) {
-        user.nickName := nickname;
-        user.about := about;
-        userInfoMap.put(user.id, user);
-      };
-    };
-
+  // update user info
+  public shared ({ caller }) func updatePersonalInfo(nickName: Text, about: Text, avatar: Text): async(){
+    assert(caller == _owner);
+    _name := nickName;
+    _avatar := avatar;
+    _about := about;
   };
 
   public shared ({ caller }) func newNamespace(name: Text): async(){};
