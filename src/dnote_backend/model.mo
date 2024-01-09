@@ -4,10 +4,24 @@ import Text "mo:base/Text";
 
 module {
     
-    public type User = {
+    public type UserInfo = {
         id : Principal;
-        joinTime : Time.Time;
-        nickName : Text;
+        name : Text;
+        avatar: Text;
         about : Text;
+        background: Text;
+        ctime : Time.Time;
+    };
+
+    public type NamespaceModel = {
+        id: Principal;
+        name: Text;
+    };
+
+    public type OpenType = {
+        #Public;
+        #Subscribe;
+        #Payment;
+        #Private;
     }
 };
