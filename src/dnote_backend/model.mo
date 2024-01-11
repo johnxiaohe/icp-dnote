@@ -16,6 +16,10 @@ module {
     public type NamespaceModel = {
         id: Principal;
         name: Text;
+        desc: Text;
+        symbol: Text;
+        opentype: OpenType;
+        ctime: Time.Time;
     };
 
     public type OpenType = {
@@ -23,5 +27,22 @@ module {
         #Subscribe;
         #Payment;
         #Private;
-    }
+    };
+
+    public type Note = {
+        id: Nat;
+        pid: Nat;
+        title: Text;
+        content: Text;
+        ctime: Time.Time;
+        cuser: Principal;
+        utime: Time.Time;
+        uuser: Principal;
+    };
+
+    public type NoteVO = {
+        pid: Nat;
+        title: Text;
+        content: Text;
+    };
 };
