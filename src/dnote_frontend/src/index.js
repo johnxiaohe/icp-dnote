@@ -1,5 +1,16 @@
 import { dnote_backend } from "../../declarations/dnote_backend";
 
+const userinfo = {};
+const connButton = document.getElementById("login");
+
+connButton.onclick = async (e) => {
+  
+}
+
+document.getElementById("login").onclick = () => {
+  // 登录
+}
+
 document.querySelector("form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const button = e.target.querySelector("button");
