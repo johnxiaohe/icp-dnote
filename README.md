@@ -1,29 +1,38 @@
-# Dnote
-Focus on document and knowledge record sharing tools used by individuals and organizations
-https://github.com/ICPHackathon/ICP-Hackathon-2023/issues/16
+### 去中心化的文档记录管理共享工具
+项目名称：Spark
+每颗星星都很美丽，都在努力的发光发亮，我们很难记住每一颗星星，但是当星星聚在一起形成美轮美奂的星河，却能迸发出无比强大的能量，给我们留下深刻的记忆。
+Spark就是这样一个平台，平台靠大家共同努力，让它发光发亮，平台的光亮又能囊括更多的星光进来，并且让更多的人注意到我们的光亮，注意到光亮之下的每一个Spark！
+我希望可以有更多团队、更多个体加入进来使用，一方面摆脱web2无限制变更的会员计划，各种费用自己掌控，数据自己掌控，摆脱偷窥问题，另一方面可以分享团队/个人的经验技能。
+每个人是平台的建设者，每个人也是平台的受益人。你有想法分享知识、分享内容那平台的流量也会通过公开的知识空间注入到每个建设者去，并且一切的收益均会直接到达你自己的空间随时提取，大家要做的是保证Spark持续发光发亮即可。Spark也会通过投放/竞价排名等方式获取收益，在维持团队和Spark平台运行之余，多余收益将分发给每一个参与者，每个人都是Spark的股东。
+Spark能做什么？
+1. 记录个人私密文档（日记、工作总结）
+2. 输出个人创作内容（小说、专辑词曲、知识分享、私域运营）
+3. 管理公司/项目/团队文档
+4. Spark提供订阅、打赏、付费查看等多种方式帮助参与者更好地知识变现
+5. Spark通过热门工作空间、热门创作者、提供付费曝光渠道等方式帮助参与者获取用户、为大家赚取收益提供分成。
+为什么做Spark？
+苦价格不透明，苦平台专权独大、苦数据内容被随意剽窃久矣！
+web2的文档管理工具诸如：语雀、有道云、腾讯文档、石墨文档、confluence等等，都是中心化存储，当我们开始使用并且产生依赖时，话语权往往不在用户手上，而是在服务上那边，客户常常处于被动状态。
+安全可靠性：数据存储在服务方，服务方有数据的管理权限查看权限，并且当服务方出现问题时，应用就处于不可用状态、也暴露过被内部人员偷看文档、丢失私钥等等案例。 尽管服务方总是承诺各种可靠性和安全性并不能阻止人为的问题。
+价格：对于个人轻度用户还好，有些免费的限额，但是当某段时间用的多时开很长时间vip也不是很划算，并不是按量收费。对于企业用户而言，各家服务方总是会对不同企业规模，财力程度、紧急程度制订不同的收费标准(尽可能有更好的利润率)，价格总是不透明的。
+迁移依赖：基于服务方总是会变的政策(免费政策，收费标准)，以及企业用户的取舍(切换到比现在更优惠的服务商)，或者面临服务商停机下线。数据的迁移又是一个问题，这时留给我们的是一个限时的时间以及所有部门参与进来的额外工作，并且当我们使用时间长，依赖度高的时候往往会被收费更高！！！
+自建成本：相当规模的中小型公司有时候会选择自建文档管理工具，但是在本身文档数据量不大情况下，特地搭建节点还要保证可用性的情况下成本还是蛮高的。
 
-Modules:  
-Diary management  
-Namespace management  
-Subscription management(focus namespace, subscription:free/payable)  
-Level management  
-Access management(write access)  
-Note management  
-Portal  
 
-Namespace Scope:  
-personal、organizational  
+技术架构：
+前端：React、Html、CSS
+后端: motoko (后续如果有回调/定时任务之类的主动触发功能考虑用go做管理、Portal是否也用go做中心化服务(便于建立索引更快检索)？)
 
-Visibility type  
-Diary: private(encrypt?)  
-Namespace: public\private  
-Note: public\public&payable\subscription\private  
-
-Searchable  
-public\payable\subscription : searchable  
-private : not searchable  
-
-Advantage  
-Dnote has no risk of going offline and will not cause application unavailability problems caused by component downtime. 
-Public price and no migaration hassles, Data not lost.
-The cost is only related to usage, data size, and usage time. There will be no additional charges or abnormal cost fluctuations due to company size or discounts.
+项目架构图
+user canister是用户操作的Proxy
+前端canister
+｜
+｜
+工具后端canister
+｜
+｜ 创建|管理info    创建｜管理            收益管理
+用户canister     -----------------  namespace canister   ---> 管理notes
+｜
+｜ follow                        subscribe                  payment or freeview
+｜
+其他用户

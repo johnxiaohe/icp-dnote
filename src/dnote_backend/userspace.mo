@@ -1,4 +1,5 @@
 import Principal "mo:base/Principal";
+import Cycles "mo:base/ExperimentalCycles";
 import Text "mo:base/Text";
 import Time "mo:base/Time";
 import List "mo:base/List";
@@ -8,11 +9,11 @@ import Namespace "namespace";
 
 // 用户Admin-Canister： 用户信息管理、NS管理、Cycles管理、NS订阅管理、粉丝管理、关注管理
 shared({caller}) actor class UserSpace(
+    _index: Nat,
     _owner: Principal,
     _name: Text,
     _avatar: Text,
     _about: Text,
-    _background: Text,
 ) = this{
 
     type UserInfo = model.UserInfo;
@@ -20,12 +21,14 @@ shared({caller}) actor class UserSpace(
     type OpenType = model.OpenType;
     type NamespaceActor = ns.NamespaceActor;
 
+    private stable var index : Nat = _index;
     private stable var owner : Principal = _owner;
     private stable var name : Text = _name;
     private stable var avatar : Text = _avatar;
     private stable var about : Text = _about;
-    private stable var background : Text = _background;
     private stable var ctime : Time.Time = Time.now();
+    private stable var cyclesPerToken: Nat = 20_000_000_000; // 0.02t cycles for each token canister
+
 
     // personal workspace info
     private stable var ownerNs: List.List<Principal> = List.nil();
@@ -35,25 +38,25 @@ shared({caller}) actor class UserSpace(
 
     public shared({caller}) func getUserInfo(): async UserInfo{
         {
-            id=owner;
+            index=index;
+            id=Principal.fromActor(this);
             name=name;
             avatar=avatar;
             about=about;
-            background=background;
             ctime=ctime;
         }
     };
 
-    public shared({caller}) func updateUserInfo(user: UserInfo):async (){
+    public shared({caller}) func updateUserInfo(nname: Text, navatar: Text, nabout: Text):async (){
         assert(caller == owner);
-        name := user.name;
-        avatar := user.avatar;
-        about := user.about;
-        background := user.background;
+        name := nname;
+        avatar := navatar;
+        about := nabout;
     };
 
     public shared({caller}) func createNamespace(name: Text, desc: Text, openType: OpenType): async(){
         assert(caller == owner);
+        Cycles.add(cyclesPerToken);
         let namespace = await ns.NamespaceActor(caller, name, "", desc, openType);
         let nsId = Principal.fromActor(namespace);
         ownerNs := List.push(nsId, ownerNs);

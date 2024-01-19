@@ -1,15 +1,21 @@
 import Time "mo:base/Time";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
+import Nat "mo:base/Nat";
 
 module {
+
+    public type Resp<T> = {
+        code: Nat;
+        data: T;
+    };
     
     public type UserInfo = {
+        index: Nat;
         id : Principal;
         name : Text;
         avatar: Text;
         about : Text;
-        background: Text;
         ctime : Time.Time;
     };
 
