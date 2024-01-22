@@ -68,6 +68,15 @@ shared({caller}) actor class UserSpace(
         await namespace.updateInfo(name,desc,openType);
     };
 
+    public shared({caller}) func namespaces(): async [NamespaceModel]{
+        var result:List.List<NamespaceModel> = List.nil();
+        for(nsId in List.toIter<Principal>(ownerNs)){
+            let namespace: NamespaceActor = actor(Principal.toText(nsId));
+            result := List.push(await namespace.getInfo(), result);
+        };
+        return List.toArray(result);
+    };
+
     public shared({caller}) func follow(id: Principal): async(){
         assert(caller == owner);
         follows := List.push(id, follows);
