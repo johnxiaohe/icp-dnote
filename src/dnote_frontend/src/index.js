@@ -21,8 +21,10 @@ signup_form.style.display = 'none';
 async function index(){
   const idx = document.getElementById("idx");
   const nsp = document.getElementById("nsp");
+  const ats = document.getElementById("ats");
   idx.style.display = 'block';
   nsp.style.display = 'none';
+  ats.style.display = 'none';
 }
 
 async function login(e) {
@@ -65,8 +67,10 @@ async function namespaces(){
   }
   const idx = document.getElementById("idx");
   const nsp = document.getElementById("nsp");
+  const ats = document.getElementById("ats");
   idx.style.display = 'none';
   nsp.style.display = 'flex';
+  ats.style.display = 'none';
   const nsp_u = document.getElementById("nsp_u");
   nsp_u.innerHTML = ''
   let namespaces = await uActor.namespaces();
@@ -128,28 +132,83 @@ async function createNs(){
 // 指定命名空间的文章列表
 async function ns_list(id,name){
   let c_ns = document.getElementById("c_ns");
-  let ats = document.getElementById("ats");
   c_ns.innerText = name;
-  c_ns.onclick = () => {     
-    const idx = document.getElementById("idx");
-    const nsp = document.getElementById("nsp");
-    idx.style.display = 'none';
-    nsp.style.display = 'none';
- };
-  ats.style.display='flex';
+  c_ns.onclick = () => ns_list(id,name);
+
+  let ats = document.getElementById("ats");
+  ats.style.display='grid';
+  const idx = document.getElementById("idx");
+  idx.style.display = 'none';
   const nsp = document.getElementById("nsp");
   nsp.style.display = 'none';
 
+  const t_tt = document.getElementById("t_tt");
+  t_tt.innerText = "";
+  const c_ctx = document.getElementById("c_ctx");
+  c_ctx.innerText = "pls click title from left side for view content";
+  const up_tt = document.getElementById("up_tt");
+  up_tt.style.display = "none";
+
+  const aul = document.getElementById("aul");
+  aul.innerHTML = "";
+  let notes = await uActor.articals(id,0);
+  console.log(notes);
+  for(let note of notes){
+    let noteLi = document.createElement("li");
+    noteLi.innerText = note.title;
+    noteLi.id = note.id;
+    noteLi.onclick = () => artical(id, note.id, note.title, note.content);
+    aul.appendChild(noteLi);
+  }
+  let addNoteLi = document.createElement("li");
+  addNoteLi.id = "addNoteLi";
+  addNoteLi.innerHTML = "<h3>+</h3>"
+  addNoteLi.onclick = () => c_artical(id,name);
+  aul.appendChild(addNoteLi);
 }
 
 // 创建该命名空间下文章
-async function c_artical(){
-
+async function c_artical(id, name){
+  let addNoteLi = document.getElementById("addNoteLi");
+  addNoteLi.onclick = null;
+  addNoteLi.innerHTML = "<input id=\"a_title\" type=\"text\" /><button id=\"s_note\">save</button>"
+  let s_note = document.getElementById("s_note");
+  s_note.onclick = async () => {
+    let title = document.getElementById("a_title").value;
+    await uActor.createArtical(id,title,"",0);
+    alert("添加文章成功");
+    ns_list(id,name);
+  }
 }
 
-// 获取文章信息
-async function artical(){
-  
+// 获取文章信息，添加到ctt中
+async function artical(ns_id, id, title, content){
+  const t_tt = document.getElementById("t_tt");
+  t_tt.innerText = title;
+  const c_ctx = document.getElementById("c_ctx");
+  c_ctx.innerText = content;
+  c_ctx.style.display="block";
+  const up_tt = document.getElementById("up_tt");
+  up_tt.style.display = "block";
+  const u_ctx = document.getElementById("u_ctx");
+  u_ctx.style.display = "none";
+  up_tt.onclick = async () => {
+    if (up_tt.innerText == "save"){
+      await uActor.updateArtical(ns_id, id, title, u_ctx.value);
+      c_ctx.innerText = u_ctx.value;
+      u_ctx.style.display = 'none';
+      c_ctx.style.display = 'block';
+      up_tt.innerText = "update";
+      return;
+    }
+    if(up_tt.innerText == "update"){
+      up_tt.innerText = "save";
+      c_ctx.style.display='none';
+      u_ctx.style.display = "block";
+      u_ctx.value = content;
+      return;
+    }
+  };
 }
 
 indexElm.onclick = index;

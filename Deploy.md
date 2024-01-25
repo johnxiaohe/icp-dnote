@@ -62,6 +62,7 @@ dfx start --background
 dfx deps pull
 dfx deps init --argument '(null)' internet-identity
 dfx deps deploy
+dfx deploy dnote_backend
 
 dfx generate dnote_namespace
 dfx generate dnote_user

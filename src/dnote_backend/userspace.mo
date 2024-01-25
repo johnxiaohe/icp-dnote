@@ -20,6 +20,8 @@ shared({caller}) actor class UserSpace(
     type NamespaceModel = model.NamespaceModel;
     type OpenType = model.OpenType;
     type NamespaceActor = ns.NamespaceActor;
+    type Note = model.Note;
+    type NoteVO = model.NoteVO;
 
     private stable var index : Nat = _index;
     private stable var owner : Principal = _owner;
@@ -122,6 +124,30 @@ shared({caller}) actor class UserSpace(
         subscribes := newSub;
     };
 
+    public shared({caller}) func articals(nsId: Principal, pid: Nat): async [Note]{
+        let namespace: NamespaceActor = actor(Principal.toText(nsId));
+        return await namespace.getNotes(pid);
+    };
+
+    public shared({caller}) func createArtical(nsId: Principal, title: Text, content: Text, pid: Nat): async (){
+        let namespace: NamespaceActor = actor(Principal.toText(nsId));
+        let note: NoteVO = {
+            pid=pid;
+            title=title;
+            content=content;
+        };
+        await namespace.addNote(note);
+    };
+
+    public shared({caller}) func updateArtical(nsId: Principal, id: Nat, title: Text, content: Text): async (){
+        let namespace: NamespaceActor = actor(Principal.toText(nsId));
+        let note: NoteVO = {
+            pid=id;
+            title=title;
+            content=content;
+        };
+        await namespace.updateNote(note);
+    }
     
 
 } 

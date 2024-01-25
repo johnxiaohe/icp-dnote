@@ -122,6 +122,26 @@ shared({caller}) actor class NamespaceActor(
         putNote(noteIndex, note);
     };
 
+    public shared({caller}) func updateNote(vo: NoteVO): async(){
+        switch(getNote(vo.pid)){
+            case(null){};
+            case(?note){
+                let n_note = {
+                    id=vo.pid;
+                    pid= note.pid;
+                    title=vo.title;
+                    content=vo.content;
+                    ctime=note.ctime;
+                    cuser=note.cuser;
+                    utime=Time.now();
+                    uuser=caller;
+                };
+                putNote(vo.pid, n_note);
+            };
+        };
+    };
+
+
     public shared({caller}) func getNotes(pid: Nat): async [Note]{
         var ids:[Nat] = [];
         if(pid == 0){
